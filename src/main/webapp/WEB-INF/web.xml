@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+         http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+    <!-- Login-logout -->
+
+    <servlet>
+        <servlet-name>loginController</servlet-name>
+        <servlet-class>net.gutsoft.cardgame.controller.security.LoginController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>loginController</servlet-name>
+        <url-pattern>/login.do</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>logoutController</servlet-name>
+        <servlet-class>net.gutsoft.cardgame.controller.security.LogoutController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>logoutController</servlet-name>
+        <url-pattern>/logout.do</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>registerController</servlet-name>
+        <servlet-class>net.gutsoft.cardgame.controller.security.RegistrationController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>registerController</servlet-name>
+        <url-pattern>/register.do</url-pattern>
+    </servlet-mapping>
+
+    <!-- Shop -->
+
+    <servlet>
+        <servlet-name>buyCardController</servlet-name>
+        <servlet-class>net.gutsoft.cardgame.controller.BuyCardController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>buyCardController</servlet-name>
+        <url-pattern>/buyCard.do</url-pattern>
+    </servlet-mapping>
+
+    <!-- Deck -->
+
+    <servlet>
+        <servlet-name>createNewDeckController</servlet-name>
+        <servlet-class>net.gutsoft.cardgame.controller.account.CreateNewDeckController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>createNewDeckController</servlet-name>
+        <url-pattern>/createNewDeck.do</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>deleteDeckController</servlet-name>
+        <servlet-class>net.gutsoft.cardgame.controller.account.DeleteDeckController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>deleteDeckController</servlet-name>
+        <url-pattern>/deleteDeck.do</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>manageDeckController</servlet-name>
+        <servlet-class>net.gutsoft.cardgame.controller.account.ManageDeckController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>manageDeckController</servlet-name>
+        <url-pattern>/manageDeck.do</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>addCardToDeck</servlet-name>
+        <servlet-class>net.gutsoft.cardgame.controller.account.AddCardToDeckController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>addCardToDeck</servlet-name>
+        <url-pattern>/addCardToDeck.do</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>removeCardFromDeck</servlet-name>
+        <servlet-class>net.gutsoft.cardgame.controller.account.RemoveCardFromDeckController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>removeCardFromDeck</servlet-name>
+        <url-pattern>/removeCardFromDeck.do</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>leaveDeckManagementController</servlet-name>
+        <servlet-class>net.gutsoft.cardgame.controller.account.LeaveDeckManagementController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>leaveDeckManagementController</servlet-name>
+        <url-pattern>/leaveDeckManagement.do</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>saveDeckController</servlet-name>
+        <servlet-class>net.gutsoft.cardgame.controller.account.SaveDeckController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>saveDeckController</servlet-name>
+        <url-pattern>/saveDeck.do</url-pattern>
+    </servlet-mapping>
+
+    <!-- Battle -->
+
+    <servlet>
+        <servlet-name>createBattleController</servlet-name>
+        <servlet-class>net.gutsoft.cardgame.controller.battle.CreateBattleController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>createBattleController</servlet-name>
+        <url-pattern>/createBattle.do</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>joinBattleController</servlet-name>
+        <servlet-class>net.gutsoft.cardgame.controller.battle.JoinBattleController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>joinBattleController</servlet-name>
+        <url-pattern>/joinBattle.do</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>leaveBattleController</servlet-name>
+        <servlet-class>net.gutsoft.cardgame.controller.battle.LeaveBattleController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>leaveBattleController</servlet-name>
+        <url-pattern>/leaveBattle.do</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>makeTurnController</servlet-name>
+        <servlet-class>net.gutsoft.cardgame.controller.battle.MakeTurnController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>makeTurnController</servlet-name>
+        <url-pattern>/makeTurn.do</url-pattern>
+    </servlet-mapping>
+
+
+    <!-- listeners -->
+    <listener>
+        <listener-class>net.gutsoft.cardgame.util.Initializer</listener-class>
+    </listener>
+
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/appContext.xml</param-value>
+    </context-param>
+
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
+</web-app>

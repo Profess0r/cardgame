@@ -1,0 +1,10 @@
+.cards ul li, .players ul li {
+    list-style-type: none;
+    float: left;
+    /*clear: right;*/
+    position: relative;
+}
+
+.target:hover {
+    cursor: grab;
+}
