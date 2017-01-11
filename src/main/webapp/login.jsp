@@ -9,7 +9,6 @@
 
     <br/><a href="./index.jsp">back</a>
 
-    <%-- необходимо предотвратить отображение пароля в url, но метод post здесь вызывает ошибку --%>
     <form action="login.do" method="post" enctype="application/x-www-form-urlencoded">
         <label for="login">Login:</label>
         <br><input name="login" id="login" type="text"/>

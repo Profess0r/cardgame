@@ -23,6 +23,7 @@
                     <br/>health: ${card.maxHealth}
                     <br/>power: ${card.power}
                     <br/>defence: ${card.defence}
+                    <br/>initiative: ${card.initiative}
                     <br/>description: ${card.description}
                 </li>
             </c:forEach>

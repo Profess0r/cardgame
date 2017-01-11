@@ -19,11 +19,24 @@ public class CreateBattleController extends DependencyInjectionServlet {
 
         // все это еще надо будет завернуть в try !!!
 
-        // нужно проверянь наличие активной колоды
-
-        // вероятно, сущьность Player не нужна - видимо все таки нужна
-        Battle battle = new Battle();
         Player player = new Player((Account) req.getSession().getAttribute("account"));
+
+        if (player.getDeck() == null) {
+            resp.sendRedirect("arena.jsp");
+            return;
+        }
+
+        String name = req.getParameter("name");
+        if (name.equals("")) {
+            name = "battle";
+        }
+        int maxPlayers = Integer.parseInt(req.getParameter("maxPlayers"));
+        int maxLevel = Integer.parseInt(req.getParameter("maxLevel"));
+
+        Battle battle = new Battle();
+        battle.setName(name);
+        battle.setMaxPlayers(maxPlayers);
+        battle.setMaxLevel(maxLevel);
         battle.addPlayer(player);
 
         Map<Integer, Battle> battleMap = (Map<Integer, Battle>) getServletContext().getAttribute("battles");

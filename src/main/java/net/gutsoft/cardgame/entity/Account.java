@@ -70,6 +70,9 @@ public class Account {
     @Column(name = "level")
     private int level;
 
+    @Column(name = "avatar")
+    private int avatar;
+
 //    @Column(name = "gameClass")
 //    private String gameClass;  // или скорее значение из enum-a
 //
@@ -147,6 +150,10 @@ public class Account {
         this.money = money;
     }
 
+    public void applyMoney(int money) {
+        this.money += money;
+    }
+
     public int getHealth() {
         return health;
     }
@@ -163,12 +170,35 @@ public class Account {
         this.experience = experience;
     }
 
+    public void applyExperience(int exp) {
+        this.experience += exp;
+
+        if (this.experience > (500 + 500 * this.level)) {
+            this.levelUp();
+        }
+    }
+
     public int getLevel() {
         return level;
     }
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public void levelUp() {
+        this.experience = 0;
+        this.health += 10;
+        this.money += 100 * this.level;
+        this.level++;
+    }
+
+    public int getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(int avatar) {
+        this.avatar = avatar;
     }
 
     public Deck getActiveDeck() {

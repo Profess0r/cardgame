@@ -20,7 +20,7 @@
 
     <button id="leaveBattleSeparate" type="submit" onclick="leaveBattle()">leave battle</button>
 
-    <br/><button id="startButton" type="submit" onclick="startBattle()">start battle</button>
+    <br/><button id="startButton" type="submit" onclick="startBattle()" disabled>start battle</button>
 
 
 
@@ -52,7 +52,9 @@
         </p>
 
         <%-- нужно будет сделать чат с полосой прокрутки --%>
-        <p id="chat"></p>
+        <p>
+            <textarea id="chat" cols="100" rows="10" readonly></textarea>
+        </p>
 
     </div>
 

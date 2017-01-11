@@ -20,19 +20,29 @@ public class JoinBattleController extends DependencyInjectionServlet {
 
         // все это еще надо будет завернуть в try !!!
 
-        // нужно проверить не превысило ли количество игроков максимума
-
-        // нужно проверянь наличие активной колоды
-
         Player player = new Player((Account) req.getSession().getAttribute("account"));
 
         Map<Integer, Battle> battleMap = (Map<Integer, Battle>) getServletContext().getAttribute("battles");
-
         int battleId = Integer.parseInt(req.getParameter("battleId"));
-
         Battle battle = battleMap.get(battleId);
 
-        // сдесь, вероятно, имеет смысл добавить проверку на то, не началась ли битва
+        // потом нужно сделать это через errorMap
+        if (player.getDeck() == null) {
+            resp.sendRedirect("arena.jsp");
+            return;
+        }
+        if (battle.isStarted()) {
+            resp.sendRedirect("arena.jsp");
+            return;
+        }
+        if (battle.getPlayerList().size() > (battle.getMaxPlayers() - 1)) {
+            resp.sendRedirect("arena.jsp");
+            return;
+        }
+        if (player.getLevel() > battle.getMaxLevel()) {
+            resp.sendRedirect("arena.jsp");
+            return;
+        }
 
         battle.addPlayer(player);
 

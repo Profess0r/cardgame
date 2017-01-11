@@ -7,7 +7,7 @@ import javax.persistence.Persistence;
 public class EntityManagerHolder {
 
     private EntityManagerFactory entityManagerFactory;
-    private EntityManager entityManager;
+    private static EntityManager entityManager;
 
 
     public void init() {
@@ -16,7 +16,7 @@ public class EntityManagerHolder {
         entityManager = entityManagerFactory.createEntityManager();
     }
 
-    public EntityManager getEntityManager() {
+    public static EntityManager getEntityManager() {
         return entityManager;
     }
 

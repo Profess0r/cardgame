@@ -30,6 +30,11 @@ var leaveBattle = function() {
     window.location = "leaveBattle.do";
 };
 
+var pullFromDrop = function() {
+    usedCard = "drop";
+    makeTurn();
+};
+
 
 var refreshBattlefield = function() {
     var xmlhttp;
@@ -70,10 +75,11 @@ var handler = {
 
     processMessage: function(message) {
 
-        var resultMessage = "<br\>" + message.userName;
+        var resultMessage = "";
+        var turnLog = "";
 
         if (message.type == MessagesTypes.MESSAGE){
-            resultMessage = resultMessage + ": " + message.message;
+            resultMessage = "\n" + message.userName + ": " + message.message;
         } else if (message.type == MessagesTypes.TURNEND){
             console.log("turn end message received");
             refreshBattlefield();
@@ -87,7 +93,7 @@ var handler = {
             }
 
             // todo: messages for battle log ...
-            resultMessage = resultMessage + "next turn"
+            turnLog = "\n" + message.message;
         } else if (message.type == MessagesTypes.BATTLEEND){
             // todo: battle end
 
@@ -99,17 +105,21 @@ var handler = {
                 }
             }
 
-            resultMessage = "battle ended!";
+            turnLog = "\nbattle ended!";
             // вывести результаты и кнопку "покинуть битву" => leaveBattle.do
         } else if (message.type == MessagesTypes.USERLEAVE){
-            resultMessage = resultMessage + " leaved battle";
+            refreshBattlefield();
+
+            resultMessage = "\n" + message.userName + ": leaved battle";
         } else {
             // unknown (invalid type) message
         }
 
         var chatLog = document.getElementById('chat');
-
         chatLog.innerHTML += resultMessage;
+
+        var battleLog = document.getElementById('log');
+        battleLog.innerHTML += turnLog;
 
     }
 
@@ -137,6 +147,7 @@ function refreshScripts() {
     console.log(targets);
 
     cardListenersOn();
+    document.getElementById("pullFromDrop").disabled = false;
 }
 
 function cardListenersOn() {
@@ -200,6 +211,7 @@ function makeTurn()
 {
     cardListenersOff();
     targetListenersOff();
+    document.getElementById("pullFromDrop").disabled = true;
 
     clearTimeout(timeoutId);
     websocket.sendMessage(new Message(MessagesTypes.PLAYERTURN, accountId, userName, "", usedCard, turnTarget));
@@ -213,15 +225,18 @@ function checkPlayerDefeat() {
 }
 
 function endBattle() {
-    alert("you was defeated");
+    document.getElementById("endTurn").disabled = true;
+    var exp = document.getElementById("exp").textContent;
+    alert("You was defeated.\nYou got " + exp + " experience.\nYou got " + (exp-exp%10)/10 + " money.");
 }
 
 function winBattle() {
+    document.getElementById("endTurn").disabled = true;
+    var exp = document.getElementById("exp").textContent;
     cardListenersOff();
     targetListenersOff();
     clearTimeout(timeoutId);
-
-    alert("you won battle!");
+    alert("You won battle!\nYou got " + exp + " experience.\nYou got " + (exp-exp%10)/10 + " money.");
 }
 
 

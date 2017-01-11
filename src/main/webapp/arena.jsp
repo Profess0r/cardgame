@@ -8,26 +8,36 @@
     <br/>ARENA
     <br/>
 
+    <p><textarea id="help" cols="150" rows="6" disabled>
+        Это арена.
+    Здесь можно создать свое сражение ("Create battle")
+    либо присоединиться к уже существующему ("Join battle").
+    Если не отображается длинный список существующих сражений , то их просто нет.
+    </textarea></p>
+
     <%-- здесь также должен быть скрипт обновляющий список доступных битв --%>
 
     <%-- при создании или присоединении к битве (матчу) нужно проверянь наличие активной колоды --%>
-    <br/><a href="./createBattle.do">create battle</a>
+    <br/><a href="./createBattle.jsp">Create battle</a>
     <br/><a href="./main.jsp">back</a>
 
     <br/><br/>
     <h2>Battles</h2>
     <ul>
         <c:forEach var="battle" items="${battles}">
-            <li>
-                <br/>
-                <%--<br/>name: ${battle.name}--%>
-                <%-- ограничения на участие (уровень) --%>
-                <br/>name: battle - ${battle.value.id}
-                <br/>players: ${battle.value.playerList.size()}/10
-                <br/><a href="./joinBattle.do?battleId=${battle.value.id}">join battle</a>
-            </li>
+            <c:if test="${!battle.value.started}">
+                <li>
+                    <br/>
+                    <br/>name: ${battle.value.name}
+                    <br/>players: ${battle.value.playerList.size()}/${battle.value.maxPlayers}
+                    <br/>max level: ${battle.value.maxLevel}
+                    <br/><button class="joinBattle" onclick="joinBattle(${battle.value.id})">Join battle</button>
+                </li>
+            </c:if>
         </c:forEach>
     </ul>
+
+    <script type="text/javascript" src="scripts/arena.js"></script>
 
 </body>
 </html>

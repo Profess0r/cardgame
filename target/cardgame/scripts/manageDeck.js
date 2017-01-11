@@ -27,6 +27,16 @@ var saveChanges = function() {
 
     var cardsInDeck = document.getElementById("deckCards").getElementsByClassName("card");
 
+    if (name === "") {
+        alert("Name can't be empty");
+        return;
+    }
+
+    if (active && cardsInDeck.length < 5) {
+        alert("Active deck must contain at least 5 cards");
+        return;
+    }
+
     var cards = "";
     console.log(active);
 

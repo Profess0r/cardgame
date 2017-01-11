@@ -6,5 +6,4 @@
 
     <bean id="entityManagerHolder" class="net.gutsoft.cardgame.hibernate.EntityManagerHolder" destroy-method="close" scope="prototype"/>
 
-
 </beans>

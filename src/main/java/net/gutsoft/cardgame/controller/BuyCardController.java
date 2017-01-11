@@ -46,9 +46,8 @@ public class BuyCardController extends DependencyInjectionServlet {
         account.setMoney(account.getMoney() - card.getPrice());
 
         //save changes to bd
-        Account updatedAccount = DataBaseManager.updateEntity(account);
-        // TODO: 12.10.2016 проверить нужно ли создавать новый обьект для updatedAccount или можно обойтись старым
-        req.getSession().setAttribute("account", updatedAccount);
+        account = DataBaseManager.updateEntity(account);
+        req.getSession().setAttribute("account", account);
         // если не производить перезапись обьекта в сессию, то при новом апдейте
         // уже занесенные в БД данные распознаются как новые и записываются повторно
 

@@ -26,12 +26,20 @@ function addPlayerToList(accountId, userName, userLevel) {
     li.setAttribute("id", "player " + accountId);
     li.innerHTML = "name: " + userName + ", level: " + userLevel;
     list.appendChild(li);
+
+    if (list.children.length > 1) {
+        document.getElementById("startButton").disabled = false;
+    }
 }
 
 function removePlayerFromList(accountId) {
     var list = document.getElementById("playerList");
     var li = document.getElementById("player " + accountId);
     list.removeChild(li);
+
+    if (list.children.length < 2) {
+        document.getElementById("startButton").disabled = true;
+    }
 }
 
 var leaveBattle = function() {
@@ -69,7 +77,7 @@ var handler = {
 
     processMessage: function(message) {
 
-        var resultMessage = "<br\>" + message.userName;
+        var resultMessage = "\n" + message.userName;
 
         if (message.type == MessagesTypes.MESSAGE){
             resultMessage = resultMessage + ": " + message.message;

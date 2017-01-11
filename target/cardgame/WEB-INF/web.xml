@@ -33,6 +33,26 @@
         <url-pattern>/register.do</url-pattern>
     </servlet-mapping>
 
+    <!-- Account -->
+
+    <servlet>
+        <servlet-name>avatarImagesController</servlet-name>
+        <servlet-class>net.gutsoft.cardgame.controller.AvatarImagesController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>avatarImagesController</servlet-name>
+        <url-pattern>/avatarImages.do</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>setAvatarController</servlet-name>
+        <servlet-class>net.gutsoft.cardgame.controller.account.SetAvatarController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>setAvatarController</servlet-name>
+        <url-pattern>/setAvatar.do</url-pattern>
+    </servlet-mapping>
+
     <!-- Shop -->
 
     <servlet>
@@ -74,11 +94,11 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>addCardToDeck</servlet-name>
+        <servlet-name>addCardToDeckController</servlet-name>
         <servlet-class>net.gutsoft.cardgame.controller.account.AddCardToDeckController</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>addCardToDeck</servlet-name>
+        <servlet-name>addCardToDeckController</servlet-name>
         <url-pattern>/addCardToDeck.do</url-pattern>
     </servlet-mapping>
 
@@ -138,15 +158,36 @@
         <url-pattern>/leaveBattle.do</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>makeTurnController</servlet-name>
-        <servlet-class>net.gutsoft.cardgame.controller.battle.MakeTurnController</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>makeTurnController</servlet-name>
-        <url-pattern>/makeTurn.do</url-pattern>
-    </servlet-mapping>
 
+    <!-- filters -->
+    <filter>
+        <filter-name>securityFilter</filter-name>
+        <filter-class>net.gutsoft.cardgame.filters.SecurityFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>securityFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+         <!--todo: .css .js -->
+    </filter-mapping>
+
+    <filter>
+        <filter-name>battleResumeFilter</filter-name>
+        <filter-class>net.gutsoft.cardgame.filters.BattleResumeFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>battleResumeFilter</filter-name>
+        <url-pattern>*.jsp</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>battleFilter</filter-name>
+        <filter-class>net.gutsoft.cardgame.filters.BattleFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>battleFilter</filter-name>
+        <url-pattern>/battlefield.jsp</url-pattern>
+        <url-pattern>/prepareToBattle.jsp</url-pattern>
+    </filter-mapping>
 
     <!-- listeners -->
     <listener>

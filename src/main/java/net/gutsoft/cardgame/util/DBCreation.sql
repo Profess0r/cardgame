@@ -11,11 +11,13 @@ CREATE TABLE `Account` (
   `login` varchar(255) DEFAULT NULL,
   `money` int(11) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
+  `avatar` int(11) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `Card` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `initiative` int(11) DEFAULT NULL,
   `defence` int(11) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   `maxHealth` int(11) DEFAULT NULL,

@@ -19,6 +19,9 @@
         <br><input name="password" id="password" type="password" value="${password}"/>
         ${errorMap.password}
 
+        <br><label for="confirmPassword">Confirm password:</label>
+        <br><input name="confirmPassword" id="confirmPassword" type="password" value="${password}"/>
+
         <br><label for="email">Email:</label>
         <br><input name="email" id="email" type="text" value="${email}"/>
         ${errorMap.email}

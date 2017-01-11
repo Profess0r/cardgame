@@ -3,6 +3,7 @@ package net.gutsoft.cardgame.controller.battle;
 import net.gutsoft.cardgame.entity.Account;
 import net.gutsoft.cardgame.entity.Battle;
 import net.gutsoft.cardgame.entity.Player;
+import net.gutsoft.cardgame.hibernate.DataBaseManager;
 import net.gutsoft.cardgame.inject.DependencyInjectionServlet;
 
 import javax.servlet.ServletException;
@@ -20,7 +21,8 @@ public class LeaveBattleController extends DependencyInjectionServlet {
 
         // проверка не началась ли битва, предотвращение выхода в период между нажатием "старт" и началом битвы
 
-        int accountId = ((Account) req.getSession().getAttribute("account")).getId();
+        Account account = (Account) req.getSession().getAttribute("account");
+        int accountId = account.getId();
 
         Map<Integer, Battle> battleMap = (Map<Integer, Battle>) getServletContext().getAttribute("battles");
 
@@ -29,13 +31,23 @@ public class LeaveBattleController extends DependencyInjectionServlet {
         Battle battle = battleMap.get(battleId);
 
         if (battle != null) {
+            // начислить игроку опыт и деньги
+            // (лучше бы это делать сразу при поражении или победе игрока а не при выходе из битвы,
+            // так как при некорректном выходе начисление может не произойти)
+            int exp = battle.getAccountExperienceMap().get(accountId);
             battle.removePlayer(accountId);
+            account.applyExperience(exp);
+            account.applyMoney(exp/10);
+
+            account = DataBaseManager.updateEntity(account);
+            req.getSession().setAttribute("account", account);
+
             // если игроков не осталось - удалить битву
-            if (battle.getPlayerList().size() == 0) {
+            if (battle.getPlayerList().isEmpty() && battle.getAccountExperienceMap().isEmpty()) {
                 battleMap.remove(battleId);
                 getServletContext().setAttribute("battles", battleMap);
             } else {
-                battleMap.put(battleId, battle);
+                battleMap.put(battleId, battle); // вероятно это лишнее
                 getServletContext().setAttribute("battles", battleMap);
             }
         }

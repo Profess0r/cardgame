@@ -32,6 +32,7 @@
                     <br/>health: ${card.maxHealth}
                     <br/>power: ${card.power}
                     <br/>defence: ${card.defence}
+                    <br/>initiative: ${card.initiative}
                     <br/>description: ${card.description}
                     <br/>price: ${card.price}
                     <br/><br/><a href="./buyCard.do?cardId=${card.id}">buy</a>

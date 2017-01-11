@@ -28,7 +28,11 @@ public class LogoutController extends DependencyInjectionServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         HttpSession session = request.getSession(false);
+        Account account = (Account) session.getAttribute(ATTRIBUTE_NAME_ACCOUNT);
         session.removeAttribute(ATTRIBUTE_NAME_ACCOUNT);
+
+        logger.info("User " + account.getLogin() + ", id=" + account.getId() + " logged out");
+
         request.getRequestDispatcher(PAGE_ACCEPT).forward(request, response);
     }
 

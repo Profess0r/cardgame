@@ -27,8 +27,13 @@ public class BattleEndpoint {
 
     // <battleId, list<>>
     private static Dictionary<Integer, List<BattleEndpoint>> battleToPlayerEndpointTable = new Hashtable<>();
-    Session session;
-    int accountId;
+    private Session session;
+    private int accountId;
+
+    public static Dictionary<Integer, List<BattleEndpoint>> getBattleToPlayerEndpointTable() {
+        return battleToPlayerEndpointTable;
+    }
+
 
     @OnError
     public void onError(Session session, Throwable t, @PathParam("battleId") int battleId) {
@@ -83,21 +88,35 @@ public class BattleEndpoint {
             // создать отдельный (статический?) метод для этих целей (в battle?), чтобы это не выполнялось в ендпойнте отдельного игрока
 
 
-            if (battle.isTurnEnded()) {
-                broadcast(new BattleMessage(MessagesTypes.TURNEND, ""), battleId);
-            }
-
-            if (battle.isBattleEnded()) {
-                battleMap.remove(battleId, battle);
-                broadcast(new BattleMessage(MessagesTypes.BATTLEEND, ""), battleId);
-            }
+//            if (battle.isTurnEnded()) {
+//                broadcast(new BattleMessage(MessagesTypes.TURNEND, "", battle.getTurnLogAsString()), battleId);
+//                battle.clearTurnLog();
+//            }
+//
+//            if (battle.isBattleEnded()) {
+////                battleMap.remove(battleId, battle);
+//                broadcast(new BattleMessage(MessagesTypes.BATTLEEND, "", ""), battleId);
+//            }
 
         } else if (message.getType() == MessagesTypes.MESSAGE) {
             broadcast(message, battleId);
         } else if (message.getType() == MessagesTypes.USERJOIN) {
             this.accountId = message.getAccountId();
         } else if (message.getType() == MessagesTypes.USERLEAVE) {
+            Map<Integer, Battle> battleMap = (Map<Integer, Battle>)ServletContextHolder.getServletContext().getAttribute("battles");
+            Battle battle = battleMap.get(battleId);
+
+            battle.removePlayer(message.getAccountId());
+            // remove и так происходит в LeaveBattleController,
+            // но здесь он тоже пока остается на случай если удаление не успеет осуществиться до resetTurn()
+            battle.resetTurn();
+
             broadcast(message, battleId);
+
+            if (battle.getPlayerList().size() < 2) {
+//                battleMap.remove(battleId, battle);
+                broadcast(new BattleMessage(MessagesTypes.BATTLEEND, "", ""), battleId);
+            }
         } else {
             System.out.println(">>> unknown message received");
         }
@@ -105,7 +124,7 @@ public class BattleEndpoint {
     }
 
 
-    private void broadcast(BattleMessage message, int battleId) {
+    public void broadcast(BattleMessage message, int battleId) {
         for (BattleEndpoint player: battleToPlayerEndpointTable.get(battleId)) {
             try {
                 player.session.getBasicRemote().sendObject(message);

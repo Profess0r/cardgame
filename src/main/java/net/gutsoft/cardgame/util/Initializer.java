@@ -2,6 +2,7 @@ package net.gutsoft.cardgame.util;
 
 import net.gutsoft.cardgame.entity.Account;
 import net.gutsoft.cardgame.entity.Battle;
+import net.gutsoft.cardgame.hibernate.DataBaseManager;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -22,6 +23,11 @@ public class Initializer implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
 
+        // это property для log4j
+        // (если разместить это дальше, то log4j успевает загрузится с rootPath по умолчанию)
+        System.out.println(sce.getServletContext().getRealPath("/"));
+        System.setProperty("rootPath", sce.getServletContext().getRealPath("/"));
+
         // !!! following code prevents from:
         // java.sql.SQLException:
         // No suitable driver found for
@@ -40,21 +46,16 @@ public class Initializer implements ServletContextListener {
 //                e.printStackTrace();
 //            }
 
+        DataBaseManager.open();
 
-        // !!! following code actually must be executed only once on server loading:
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("mySqlPersistenceUnit");
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        Account shop = new Account();
         try {
-            Account shop = (Account) entityManager.createQuery("select a from Account a where login = :login").setParameter("login", "shop").getSingleResult();
-            sce.getServletContext().setAttribute("shop", shop);
+            shop = DataBaseManager.getEntityByParameter(shop,"login", "shop");
         } catch (NoResultException e) {
-            throw new RuntimeException("Error - shop does not exist");
-        } finally {
-            entityManager.close();
-            entityManagerFactory.close();
+            System.out.println("shop not exist");
+            e.printStackTrace();
         }
-
-
+        sce.getServletContext().setAttribute("shop", shop);
 
         Map<Integer, Battle> battleMap = new HashMap<>(); // ConcurrencyHashMap<>();
         sce.getServletContext().setAttribute("battles", battleMap);
@@ -65,6 +66,6 @@ public class Initializer implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-
+        DataBaseManager.close();
     }
 }

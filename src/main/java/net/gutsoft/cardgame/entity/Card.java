@@ -1,6 +1,7 @@
 package net.gutsoft.cardgame.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "Card")
@@ -21,6 +22,8 @@ public class Card {
     private int power;
     @Column(name = "defence")
     private int defence;
+    @Column(name = "initiative")
+    private int initiative;
     @Column(name = "description")
     private String description;
 
@@ -67,6 +70,7 @@ public class Card {
         this.currentHealth = this.maxHealth;
         this.power = templateCard.getPower();
         this.defence = templateCard.getDefence();
+        this.initiative = templateCard.getInitiative();
         this.description = templateCard.getDescription();
         this.targetClass = templateCard.getTargetClass();
         this.multiusable = templateCard.isMultiusable();
@@ -127,6 +131,14 @@ public class Card {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getInitiative() {
+        return initiative;
+    }
+
+    public void setInitiative(int initiative) {
+        this.initiative = initiative;
     }
 
     public int getPrice() {
@@ -196,8 +208,12 @@ public class Card {
         }
     }
 
-    public boolean attackCard(Card targetCard, int attackModifier) {
+    public boolean attackCard(Card targetCard, int attackModifier, List<String> turnLog) {
         // возвращаемое значение: true - атакуемая карта уничтожена, false - атакуемая карта НЕ уничтожена
+
+        if (power < 1) {
+            return false;
+        }
 
         int cardAttackDamage = power/attackModifier - targetCard.getDefence();
         if (cardAttackDamage < 1) {
@@ -210,9 +226,11 @@ public class Card {
         System.out.println(targetCard.getName() + " result health = " + targetCardHealthResult);
 
         if (targetCardHealthResult < 1) {
+            turnLog.add(name + " deal " + cardAttackDamage + " points of damage and annihilate " + targetCard.getName());
             return true;
         } else {
             targetCard.setCurrentHealth(targetCardHealthResult);
+            turnLog.add(name + " deal " + cardAttackDamage + " points of damage to " + targetCard.getName());
             return false;
         }
     }

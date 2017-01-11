@@ -11,13 +11,6 @@ import java.util.List;
 
 public class DataBaseManager {
 
-    // не логидно создавать EntityManager в каждом методе, возможные решения:
-    // можно инжектить EntityManager Spring-ом (как в примере)
-    // либо сделать класс бином и создавать EntityManager при создании бина (можна также инжектить как поле)
-    // и закрывать в destroy-method-е close()
-    // сам DataBaseManager также можно инжектить как бин в классы, которые его используют,
-    // в таком случае, вероятно, методы можно/нужно делать не статическими
-
     // при появлении необходимости в новых видах запросов (фильтр карт по параметрам)
     // будет необходимо дописывать новые методы на каждый вид запроса с перекопмиляцией проекта
     // возможно, имеет смысл сделать методы менее универсальными, но с передачей в метод запроса в виде строки
@@ -28,11 +21,23 @@ public class DataBaseManager {
     // если же параметр - String, то его нужно устанавливать с помощью setParameter,
     // иначе возникают ошибки
 
+    private static EntityManagerFactory entityManagerFactory;
+    private static EntityManager entityManager;
+
+    public static void open() {
+        entityManagerFactory = Persistence.createEntityManagerFactory("mySqlPersistenceUnit");
+        entityManager = entityManagerFactory.createEntityManager();
+    }
+
+    public static void close() {
+        entityManager.clear();
+        entityManagerFactory.close();
+    }
+
+
+
     // можно создать публичный енум с возможными параметрами
     public static <T> T getEntityByParameter(T entity, String parameterName, Object parameterValue) {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("mySqlPersistenceUnit");
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-
         try {
             if (parameterValue instanceof Integer) {
                 entity = (T) entityManager.createQuery("select e from " + entity.getClass().getSimpleName() + " e where " + parameterName + " = " + (Integer)parameterValue)
@@ -42,18 +47,14 @@ public class DataBaseManager {
                         .setParameter(1, (String)parameterValue)
                         .getSingleResult();
             }
-        } finally {
-            entityManager.close();
-            entityManagerFactory.close();
+        } catch (NoResultException e){
+            throw new NoResultException("no such entity");
         }
         return entity;
     }
 
     public static <T> List<T> getEntityListByParameter(T entity, String parameterName, Object parameterValue) {
-        List<T> entityList;
-
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("mySqlPersistenceUnit");
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        List<T> entityList = null;
 
         try {
             if (parameterValue instanceof Integer) {
@@ -64,61 +65,45 @@ public class DataBaseManager {
                         .setParameter(1, (String)parameterValue)
                         .getResultList();
             }
-        } finally {
-            entityManager.close();
-            entityManagerFactory.close();
+        } catch (Exception e){
+            e.printStackTrace();
         }
         return entityList;
     }
 
     public static <T> T getEntityById(T entity, int id) {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("mySqlPersistenceUnit");
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-
         try {
             entity = (T) entityManager.find(entity.getClass(), id);
-        } finally {
-            entityManager.close();
-            entityManagerFactory.close();
+        } catch (Exception e){
+            e.printStackTrace();
         }
         return entity;
     }
 
     public static <T> T updateEntity(T entity) {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("mySqlPersistenceUnit");
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-
         try {
             entityManager.getTransaction().begin();
             entity = entityManager.merge(entity);
             entityManager.getTransaction().commit();
-        } finally {
-            entityManager.close();
-            entityManagerFactory.close();
+        } catch (Exception e){
+            e.printStackTrace();
         }
         return entity;
     }
 
     public static <T> void persistEntity(T entity) {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("mySqlPersistenceUnit");
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-
         try {
             entityManager.getTransaction().begin();
             entityManager.persist(entity);
             entityManager.getTransaction().commit();
-        } finally {
-            entityManager.close();
-            entityManagerFactory.close();
+        } catch (Exception e){
+            e.printStackTrace();
         }
     }
 
 
     // попробовать удаление с незакрытым entityManager - успешно => таки нужно пересмотреть работу с entityManager
     public static <T> void deleteEntity(T entity, int id) {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("mySqlPersistenceUnit");
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-
         try {
             entityManager.getTransaction().begin();
             entity = (T) entityManager.find(entity.getClass(), id);
@@ -127,9 +112,8 @@ public class DataBaseManager {
             entityManager.flush();
             System.out.println("after remove entity");
             entityManager.getTransaction().commit();
-        } finally {
-            entityManager.close();
-            entityManagerFactory.close();
+        } catch (Exception e){
+            e.printStackTrace();
         }
     }
 

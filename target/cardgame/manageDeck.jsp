@@ -9,6 +9,13 @@
     <br/>MANAGE DECK
     <br/>
 
+    <p><textarea id="help" cols="150" rows="6" disabled>
+        Здесь можно добавлять и удалять карты из колоды соответствующими кнопками.
+    Также можно поменять название колоды и сделать ее активной.
+    Активная колода - это та которая используется в сражении.
+    Активной может быть лишь одна колода.
+    </textarea></p>
+
     <%-- remove from session --%>
     <br/><a href="leaveDeckManagement.do">back</a>
 
@@ -32,6 +39,7 @@
                     <br/>health: ${card.maxHealth}
                     <br/>power: ${card.power}
                     <br/>defence: ${card.defence}
+                    <br/>initiative: ${card.initiative}
                     <br/>description: ${card.description}
                     <br/><button class="addCardButton" onclick="addCard(${card.id})" hidden="hidden">add to deck</button>
                     <button class="removeCardButton" onclick="removeCard(${card.id})">remove from deck</button>
@@ -39,6 +47,7 @@
                 </li>
             </c:forEach>
         </ul>
+        <br/>
     </div>
 
 
@@ -53,6 +62,7 @@
                     <br/>health: ${card.maxHealth}
                     <br/>power: ${card.power}
                     <br/>defence: ${card.defence}
+                    <br/>initiative: ${card.initiative}
                     <br/>description: ${card.description}
                     <br/><button class="addCardButton" onclick="addCard(${card.id})">add to deck</button>
                     <button class="removeCardButton" onclick="removeCard(${card.id})" hidden="hidden">remove from deck</button>

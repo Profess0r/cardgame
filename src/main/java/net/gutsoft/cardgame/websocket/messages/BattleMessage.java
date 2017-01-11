@@ -8,9 +8,10 @@ public class BattleMessage extends Message {
     public BattleMessage() {
     }
 
-    public BattleMessage(int type, String userName) {
+    public BattleMessage(int type, String userName, String message) {
         this.type = type;
         this.userName = userName;
+        this.message = message;
     }
 
     public String getCard() {
