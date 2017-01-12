@@ -32,15 +32,14 @@ public class LeaveBattleController extends DependencyInjectionServlet {
 
         if (battle != null) {
             // начислить игроку опыт и деньги
-            // (лучше бы это делать сразу при поражении или победе игрока а не при выходе из битвы,
-            // так как при некорректном выходе начисление может не произойти)
-            int exp = battle.getAccountExperienceMap().get(accountId);
             battle.removePlayer(accountId);
+            int exp = battle.getAccountExperienceMap().remove(accountId);
             account.applyExperience(exp);
             account.applyMoney(exp/10);
 
             account = DataBaseManager.updateEntity(account);
             req.getSession().setAttribute("account", account);
+
 
             // если игроков не осталось - удалить битву
             if (battle.getPlayerList().isEmpty() && battle.getAccountExperienceMap().isEmpty()) {

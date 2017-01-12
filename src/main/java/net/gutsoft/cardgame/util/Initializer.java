@@ -35,7 +35,6 @@ public class Initializer implements ServletContextListener {
         // должно вызываться перед любым обращением к jdbc-драйверу
         try {
             Class.forName("com.mysql.jdbc.Driver");
-
         } catch (ClassNotFoundException ex) {
             ex.printStackTrace();
         }
@@ -62,10 +61,14 @@ public class Initializer implements ServletContextListener {
 
         // немного странный способ, но как иначе получить доступ к ServletContext из простого класса, я не знаю
         ServletContextHolder.setServletContext(sce.getServletContext());
+
+        BattleGarbageCollector.start();
+
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
+        BattleGarbageCollector.stop();
         DataBaseManager.close();
     }
 }

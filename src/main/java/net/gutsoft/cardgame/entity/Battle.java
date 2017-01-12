@@ -6,10 +6,7 @@ import net.gutsoft.cardgame.websocket.BattleEndpoint;
 import net.gutsoft.cardgame.websocket.MessagesTypes;
 import net.gutsoft.cardgame.websocket.messages.BattleMessage;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Battle {
@@ -28,6 +25,11 @@ public class Battle {
     private boolean battleEnded = false;
     private List<String> turnLog = new ArrayList<>();
     private Thread timerThread;
+    private long createTime;
+
+    public Battle() {
+        this.createTime = System.currentTimeMillis();
+    }
 
     public int getId() {
         return id;
@@ -143,6 +145,14 @@ public class Battle {
 
     public void setAccountExperienceMap(Map<Integer, Integer> accountExperienceMap) {
         this.accountExperienceMap = accountExperienceMap;
+    }
+
+    public long getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
     }
 
     public String getTurnLogAsString() {
@@ -333,7 +343,7 @@ public class Battle {
             battleEnded = true;
             Player winner = playerList.get(0);
             winner.addWinExperience(playerCount * 5);
-            accountExperienceMap.put(winner.getAccountId(), winner.getBattleExperience());
+            this.removePlayer(winner.getAccountId());
             notifyPlayers();
             return;
         }
@@ -353,19 +363,6 @@ public class Battle {
         startTimer();
     }
 
-    // это можно использовать при прохождении BattleGarbageCollector
-    // для принудительного удаления битвы и начислении опыта
-    private void applyBattleResults() {
-        for (Map.Entry entry: accountExperienceMap.entrySet()) {
-            int accountId = (int) entry.getKey();
-            int exp = (int) entry.getValue();
-            Account account = new Account();
-            account = DataBaseManager.getEntityById(account, accountId);
-            account.applyExperience(exp);
-            account.applyMoney(exp/10);
-        }
-    }
-
     private void startTimer() {
         if (timerThread != null) {
             timerThread.interrupt();
@@ -375,7 +372,7 @@ public class Battle {
             public void run() {
                 try {
                     System.out.println("thread start sleeping");
-                    Thread.sleep(100000); //wait(100000);
+                    Thread.sleep(100000); // 1 min 40 sec
                     System.out.println("thread awake");
                     executeTurn();
                     checkTurnResults();
@@ -399,9 +396,37 @@ public class Battle {
             this.clearTurnLog();
         }
 
+        // задержка нужна для того, чтобы клиент успел обновить данные о сражении,
+        // иначе возникает дополнительный ложный визов alert
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         if (this.isBattleEnded()) {
             BattleEndpoint.getBattleToPlayerEndpointTable().get(this.id).get(0).broadcast(new BattleMessage(MessagesTypes.BATTLEEND, "", ""), this.id);
         }
     }
 
+
+    // это можно использовать при прохождении BattleGarbageCollector
+    // для принудительного удаления битвы и начислении опыта
+    // однако нет возможности положить обновленную версию аккаунта в сессию,
+    // что может привести к некоторым нестыковкам
+    private void applyBattleResults() {
+        for (Map.Entry entry: accountExperienceMap.entrySet()) {
+            int accountId = (int) entry.getKey();
+            int exp = (int) entry.getValue();
+            Account account = new Account();
+            account = DataBaseManager.getEntityById(account, accountId);
+            account.applyExperience(exp);
+            account.applyMoney(exp/10);
+        }
+    }
+
+    public void forcedEndBattle() {
+        stopTimer();
+        applyBattleResults();
+    }
 }

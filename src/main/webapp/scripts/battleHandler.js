@@ -183,8 +183,7 @@ function targetListenersOff() {
 function setCard() {
     usedCard = this.getAttribute('id');
     console.log(usedCard);
-    // похоже, здесь должна быть проверка возможных целей и включение только возможных слушателей
-    // или ставить проверку на самих слушателях
+
     cardListenersOff();
     targetListenersOn();
 }
@@ -195,16 +194,6 @@ function setTarget() {
     targetListenersOff();
     makeTurn();
 
-    // это неудавшаяся попытка предотвратить указание недопустимой цели
-    // на данный момент можно указать любую цель, но если она недопустима, то ход равнозначен "do nothing"
-    //if (${me.cardsInHand[usedCardIndex].target == true}) {
-    //    turnTarget = this.getAttribute('id');
-    //    console.log(turnTarget);
-    //    targetListenersOff();
-    //    makeTurn();
-    //    } else {
-    //    alert("not valid target");
-    //    }
 }
 
 function makeTurn()
