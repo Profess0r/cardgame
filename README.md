@@ -8,5 +8,5 @@
 хостинге с бесплатным пробным периодом, со временем ссылка может 
 меняться).
 
-http://env-5173806.molddata.cloud/cardgame/
+http://env-1979262.njs.jelastic.vps-host.net/cardgame/
 
