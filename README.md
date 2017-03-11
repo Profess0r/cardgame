@@ -8,5 +8,5 @@
 хостинге с бесплатным пробным периодом, со временем ссылка может 
 меняться).
 
-http://env-3938992.jelastic.dogado.eu/cardgame/
+http://env-7777945.j.layershift.co.uk/cardgame/
 
