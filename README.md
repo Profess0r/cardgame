@@ -8,5 +8,5 @@
 хостинге с бесплатным пробным периодом, со временем ссылка может 
 меняться).
 
-http://env-7777945.j.layershift.co.uk/cardgame/
+http://env-1191878.jelasticlw.com.br/cardgame/
 
