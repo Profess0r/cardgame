@@ -8,5 +8,5 @@
 хостинге с бесплатным пробным периодом, со временем ссылка может 
 меняться).
 
-http://env-1191878.jelasticlw.com.br/cardgame/
+http://env-9942584.fi.cloudplatform.fi/cardgame/
 
