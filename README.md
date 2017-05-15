@@ -8,5 +8,4 @@
 хостинге с бесплатным пробным периодом, со временем ссылка может 
 меняться).
 
-http://env-9942584.fi.cloudplatform.fi/cardgame/
-
+http://env-6393135.cloud.hostnet.nl/cardgame/
