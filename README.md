@@ -8,4 +8,4 @@
 хостинге с бесплатным пробным периодом, со временем ссылка может 
 меняться).
 
-http://env-6393135.cloud.hostnet.nl/cardgame/
+http://env-5473813.jelastic.regruhosting.ru/cardgame/
